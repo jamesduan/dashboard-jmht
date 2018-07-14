@@ -1,6 +1,7 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
 import { getToken } from '../utils/token'
+import { host } from '../config';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -63,13 +64,13 @@ export async function queryFakeList(params) {
 
 export async function queryArticleList(params) {
   // console.log(getToken())
-  return request('http://localhost:8001/jmht/api/article/list', {
+  return request(host + '/jmht/api/article/list', {
     headers: { token: getToken() }
   });
 }
 
 export async function saveArticle(params) {
-  return request("http://localhost:8001/jmht/api/article/add", {
+  return request(host + "/jmht/api/article/add", {
     headers: { token: getToken() },
     method: "POST",
     body: params
@@ -77,7 +78,7 @@ export async function saveArticle(params) {
 }
 
 export async function updateArticle(params) {
-  return request("http://localhost:8001/jmht/api/article/update", {
+  return request(host + "/jmht/api/article/update", {
     headers: { token: getToken() },
     method: "POST",
     body: params
@@ -85,7 +86,7 @@ export async function updateArticle(params) {
 }
 
 export async function uploadImage(data) {
-  return request("http://localhost:8001/jmht/api/uploadImage", {
+  return request(host + "/jmht/api/uploadImage", {
     headers: { token: getToken()},
     method: "POST",
     body: data
@@ -94,7 +95,7 @@ export async function uploadImage(data) {
 
 
 export async function fakeAccountLogin(params) {
-  return request('http://localhost:8001/jmht/api/user/login', {
+  return request(host + '/jmht/api/user/login', {
     method: 'POST',
     body: params
   });
