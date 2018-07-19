@@ -20,7 +20,7 @@ export default {
       }
     },
     *saveCategory({ payload }, { call, put }) {
-      console.log(payload)
+      // console.log(payload)
       yield call(addProductCategory, { name: payload.name });
 
       // get
@@ -52,9 +52,9 @@ export default {
       yield call(uploadImage, {})
     },
     *addProduct({ payload }, { call, put }) {
-      console.log(payload)
+      // console.log(payload)
       const res1 = yield call(createProduct, { name: payload.name, description: payload.desc, category_id: payload.category_id })
-      console.log("create product res -> ", res1)
+      // console.log("create product res -> ", res1)
 
       const imagePostData = {
         file: payload.fileData,
@@ -62,10 +62,10 @@ export default {
         product_id: res1.Data.product.ID
       }
       const imageUploadRes = yield call(uploadImage, imagePostData)
-      console.log(imageUploadRes)
+      // console.log(imageUploadRes)
 
       const res2 = yield call(listProduct)
-      console.log(res2)
+      // console.log(res2)
       yield put({
         type: 'product',
         payload: {

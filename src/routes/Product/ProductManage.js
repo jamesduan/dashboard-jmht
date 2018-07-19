@@ -59,7 +59,7 @@ export default class CardList extends PureComponent {
   }
 
   handleAdd = (fieldsValue) => {
-    console.log(fieldsValue)
+    // console.log(fieldsValue)
     this.props.dispatch({
       type: 'product/addProduct',
       payload: {
@@ -82,7 +82,7 @@ export default class CardList extends PureComponent {
 
   render() {
     const { product, loading, form } = this.props;
-    console.log(product)
+    // console.log(product)
     const { modalVisible } = this.state;
 
     const content = (
@@ -148,7 +148,7 @@ export default class CardList extends PureComponent {
             })
           }
           reader.onerror = (error) => {
-            console.log("Error:", error)
+            // console.log("Error:", error)
           }
 
           let fileType = file.type.split("/")[1]

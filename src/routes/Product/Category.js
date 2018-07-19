@@ -327,10 +327,10 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     const { product, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
-    console.log(product)
+    // console.log(product)
 
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>

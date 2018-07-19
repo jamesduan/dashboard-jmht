@@ -12,7 +12,7 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryArticleList, payload);
-      console.log("fetch")
+      // console.log("fetch")
       if (response.hasOwnProperty("Data")) {
         const list = response.Data.list
         yield put({
@@ -28,10 +28,10 @@ export default {
     },
     *appendFetch({ payload }, { call, put }) {
       const response = yield call(queryArticleList, payload);
-      console.log("appendFetch")
+      // console.log("appendFetch")
       if (response.hasOwnProperty("Data")) {
         const list = response.Data.list
-        console.log(list)
+        // console.log(list)
         yield put({
           type: 'appendList',
           payload: Array.isArray(list) ? list : [],
@@ -49,14 +49,14 @@ export default {
         type: 'changeConfirmLoading',
         confirmLoading: true
       })
-      console.log(payload)
+      // console.log(payload)
       const addResponse = yield call(saveArticle, { title: payload.title, content: payload.content })
 
-      console.log(addResponse)
+      // console.log(addResponse)
       const postData = { file: payload.fileData, file_type: payload.fileType, article_id: addResponse.Data.article.ID }
-      console.log(postData)
+      // console.log(postData)
       const uploadRes = yield call(uploadImage, postData)
-      console.log(uploadRes)
+      // console.log(uploadRes)
 
       yield put({
         type: 'saveOk',
@@ -70,7 +70,7 @@ export default {
 
       // 
       const response = yield call(queryArticleList, payload);
-      console.log("fetch")
+      // console.log("fetch")
       if (response.hasOwnProperty("Data")) {
         const list = response.Data.list
         yield put({
@@ -95,7 +95,7 @@ export default {
       yield call(addLike, { id: payload.id, like: payload.like })
       
       const response2 = yield call(queryArticleList, payload);
-      console.log("fetch")
+      // console.log("fetch")
       if (response2.hasOwnProperty("Data")) {
         const list = response2.Data.list
         yield put({
@@ -114,9 +114,9 @@ export default {
         type: 'changeConfirmLoading',
         confirmLoading: true
       })
-      console.log("put -> ", payload)
+      // console.log("put -> ", payload)
       const response = yield call(deleteArticle, { id: payload.id })
-      console.log(response)
+      // console.log(response)
       if (response.hasOwnProperty('Data')) {
         // if (response.Data.status === 1) {
         yield put({
@@ -127,7 +127,7 @@ export default {
       }
 
       const response2 = yield call(queryArticleList, payload);
-      console.log("fetch")
+      // console.log("fetch")
       if (response2.hasOwnProperty("Data")) {
         const list = response2.Data.list
         yield put({
@@ -147,7 +147,7 @@ export default {
       yield call(updateArticle, payload)
       /////
       const response = yield call(queryArticleList, payload);
-      console.log("fetch")
+      // console.log("fetch")
       if (response.hasOwnProperty("Data")) {
         const list = response.Data.list
         yield put({
@@ -194,7 +194,7 @@ export default {
       }
     },
     saveOk(state, action) {
-      console.log("saveOk action => ", action)
+      // console.log("saveOk action => ", action)
       return {
         ...state,
         addCompleteObj: action.payload

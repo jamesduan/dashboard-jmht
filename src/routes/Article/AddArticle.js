@@ -125,7 +125,7 @@ export default class SearchList extends Component {
     render() {
         // console.log(this.state)
         const { form, list: { list }, loading } = this.props;
-        console.log(this.props)
+        // console.log(this.props)
         // const { getFieldDecorator } = form;
 
         // const owners = [
@@ -201,7 +201,7 @@ export default class SearchList extends Component {
                 });
             },
             beforeUpload: (file) => {
-                console.log(file)
+                // console.log(file)
 
                 if (this.state.fileList.length == 0) {
                     this.setState(({ fileList }) => ({
@@ -217,7 +217,7 @@ export default class SearchList extends Component {
                         })
                     }
                     reader.onerror = (error) => {
-                        console.log("Error:", error)
+                        // console.log("Error:", error)
                     }
 
                     let fileType = file.type.split("/")[1]

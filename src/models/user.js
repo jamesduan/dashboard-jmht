@@ -20,7 +20,7 @@ export default {
     *fetchCurrent(_, { call, put }) {
       // const response = yield call(queryCurrent);
       let user = getUser()
-      console.log(user)
+      // console.log(user)
       if (!user) {
         yield put({
           type: 'login/changeLoginStatus',
