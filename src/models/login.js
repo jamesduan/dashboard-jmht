@@ -1,5 +1,5 @@
 import { fakeAccountLogin } from '../services/api';
-import { setAuthority } from '../utils/authority';
+import { setAuthority, getAuthority } from '../utils/authority';
 import { setToken, setUser } from '../utils/token';
 import { routerRedux } from 'dva/router';
 
@@ -24,11 +24,12 @@ export default {
         });
         setToken(response.Data.user.Token.Token)
         setUser(response.Data.user.NickName)
+        setAuthority(response.Data.user.RoleName)
         // yield put(routerRedux.push('/'));
         yield put(routerRedux.push('/'));
         window.location.reload()
       }
-
+      
       // Login successfully
       // if (response.status === 'ok') {
       //   // 非常粗暴的跳转,登陆成功之后权限会变成user或admin,会自动重定向到主页

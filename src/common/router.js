@@ -82,10 +82,10 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, [], () => import('../routes/Article/EditArticle')),
     },
     '/product/category': {
-      component: dynamicWrapper(app, [], () => import('../routes/Product/Category')),
+      component: dynamicWrapper(app, ['product'], () => import('../routes/Product/Category')),
     },
     '/product/productManage': {
-      component: dynamicWrapper(app, [], () => import('../routes/Product/ProductManage')),
+      component: dynamicWrapper(app, ['product'], () => import('../routes/Product/ProductManage')),
     },
 
     '/dashboard/analysis': {

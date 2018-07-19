@@ -3,7 +3,8 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { Form, Card, Select, List, Tag, Icon, Avatar, Row, Col, Button, Input, Modal, Upload } from 'antd';
 import { routerRedux, Link } from 'dva/router';
-
+import{ getUser } from '../../utils/token'
+import { host } from '../../config'
 const { TextArea } = Input;
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -85,6 +86,12 @@ export default class SearchList extends Component {
           });
     }
 
+    renderMessage = (content) => {
+        return (
+          <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
+        );
+    }
+
     gotoEdit = (item) => {
         // console.log(item)
         this.props.dispatch({
@@ -96,33 +103,53 @@ export default class SearchList extends Component {
         this.props.dispatch(routerRedux.push('/article/edit'));
     }
 
+    delArticle = (item) => {
+        this.props.dispatch({
+            type: "list/rmArticle",
+            payload: {
+                id: item.ID
+            }
+        });
+    }
+
+    addLike = (item) => {
+        this.props.dispatch({
+            type: "list/addLike",
+            payload: {
+                id: item.ID,
+                like: item.Like + 1
+            }
+        })
+    }
+
     render() {
         // console.log(this.state)
         const { form, list: { list }, loading } = this.props;
-        const { getFieldDecorator } = form;
+        console.log(this.props)
+        // const { getFieldDecorator } = form;
 
-        const owners = [
-            {
-                id: 'wzj',
-                name: '我自己',
-            },
-            {
-                id: 'wjh',
-                name: '吴家豪',
-            },
-            {
-                id: 'zxx',
-                name: '周星星',
-            },
-            {
-                id: 'zly',
-                name: '赵丽颖',
-            },
-            {
-                id: 'ym',
-                name: '姚明',
-            },
-        ];
+        // const owners = [
+        //     {
+        //         id: 'wzj',
+        //         name: '我自己',
+        //     },
+        //     {
+        //         id: 'wjh',
+        //         name: '吴家豪',
+        //     },
+        //     {
+        //         id: 'zxx',
+        //         name: '周星星',
+        //     },
+        //     {
+        //         id: 'zly',
+        //         name: '赵丽颖',
+        //     },
+        //     {
+        //         id: 'ym',
+        //         name: '姚明',
+        //     },
+        // ];
 
         const IconText = ({ type, text }) => (
             <span>
@@ -133,22 +160,22 @@ export default class SearchList extends Component {
 
         const ListContent = ({ data: { Content, CreatedAt, UserID, Image } }) => (
             <div className={styles.listContent}>
-                <img src={"http://localhost:8001/" + Image.FileName } alt="" className={aStyles.image}/>
+                <img src={host + "/" + Image.FileName } alt="" className={aStyles.image}/>
                 <div className={styles.description}>{Content}</div>
                 <div className={styles.extra}>
-                    {UserID}发布于
+                    {getUser()}发布于
                     <em>{moment(CreatedAt).format('YYYY-MM-DD hh:mm')}</em>
                 </div>
             </div>
         );
 
-        const formItemLayout = {
-            wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 24 },
-                md: { span: 12 },
-            },
-        };
+        // const formItemLayout = {
+        //     wrapperCol: {
+        //         xs: { span: 24 },
+        //         sm: { span: 24 },
+        //         md: { span: 12 },
+        //     },
+        // };
 
         const loadMore = list.length > 0 ? (
             <div style={{ textAlign: 'center', marginTop: 16 }}>
@@ -282,15 +309,15 @@ export default class SearchList extends Component {
                             loading={list.length === 0 ? loading : false}
                             rowKey="id"
                             itemLayout="vertical"
-                            loadMore={loadMore}
+                            // loadMore={loadMore}
                             dataSource={list}
                             renderItem={item => (
                                 <List.Item
                                     key={item.ID}
                                     actions={[
                                         // <IconText type="star-o" text={item.star} />,
-                                        <a className={styles.listItemMetaTitle} ><IconText type="like-o" text={item.Like} /></a>,
-                                        <a className={styles.listItemMetaTitle} ><IconText type="message" text={item.Comment} /></a>,
+                                        <a className={styles.listItemMetaTitle} onClick={() => { this.addLike(item)}}><IconText type="like-o" text={item.Like} /></a>,
+                                        <a className={styles.listItemMetaTitle} onClick={() => { this.delArticle(item)}}><IconText type="delete" text={"删除"}/></a>,
                                         <a className={styles.listItemMetaTitle} onClick={() => { this.gotoEdit(item) }}><IconText type="edit" text={"编辑"} /></a>,
                                     ]}
                                     extra={<div className={styles.listItemExtra} />}

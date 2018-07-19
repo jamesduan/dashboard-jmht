@@ -1,7 +1,23 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message } from 'antd';
-import StandardTable from '../../components/StandardTable';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Input,
+  Select,
+  Icon,
+  Button,
+  Dropdown,
+  Menu,
+  InputNumber,
+  DatePicker,
+  Modal,
+  message,
+  List,
+} from 'antd';
+// import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from '../List/TableList.less';
@@ -9,6 +25,8 @@ import styles from '../List/TableList.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
+
+const confirm = Modal.confirm;
 
 const CreateForm = Form.create()((props) => {
   const { modalVisible, form, handleAdd, handleModalVisible } = props;
@@ -40,9 +58,9 @@ const CreateForm = Form.create()((props) => {
   );
 });
 
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ product, loading }) => ({
+  product,
+  loading: loading.models.product,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -56,7 +74,7 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'product/getCategoryList',
     });
   }
 
@@ -167,9 +185,9 @@ export default class TableList extends PureComponent {
 
   handleAdd = (fields) => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'product/saveCategory',
       payload: {
-        description: fields.desc,
+        name: fields.category,
       },
     });
 
@@ -291,15 +309,41 @@ export default class TableList extends PureComponent {
     return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
   }
 
+  handleRemove = (item) => {
+    confirm({
+      title: '',
+      content: '你确定删除吗?',
+      onOk: () => {
+        this.props.dispatch({
+          type: 'product/removeCategory',
+          payload: {
+            id: item.ID,
+          },
+        });
+        message.success("删除成功")
+      },
+      onCancel: () => {},
+    });
+  }
+
   render() {
-    const { rule: { data }, loading } = this.props;
+    console.log(this.props)
+    const { product, loading } = this.props;
     const { selectedRows, modalVisible } = this.state;
+    console.log(product)
 
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
         <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
+    );
+
+    const IconText = ({ type, text }) => (
+      <span>
+        <Icon type={type} style={{ marginRight: 8 }} />
+        {text}
+      </span>
     );
 
     const parentMethods = {
@@ -311,32 +355,25 @@ export default class TableList extends PureComponent {
       <PageHeaderLayout title="分类列表">
         <Card bordered={false}>
           <div className={styles.tableList}>
-            {/* <div className={styles.tableListForm}>
-            {this.renderForm() }
-            </div> */}
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
                 新建
               </Button>
-              {
-                selectedRows.length > 0 && (
-                  <span>
-                    <Button>批量操作</Button>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        更多操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )
-              }
             </div>
-            <StandardTable
-              selectedRows={selectedRows}
+
+            <List
+              className="demo-loadmore-list"
               loading={loading}
-              data={data}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              itemLayout="horizontal"
+              // loadMore={nu}
+              dataSource={product.categories}
+              renderItem={item => (
+                <List.Item actions={[
+                  <a style={{ color: "red" }} onClick={() => { this.handleRemove(item)}}><IconText type="delete" text={"删除"} /></a>
+                ]}>
+                  <div>{item.Name}</div>
+                </List.Item>
+              )}
             />
           </div>
         </Card>

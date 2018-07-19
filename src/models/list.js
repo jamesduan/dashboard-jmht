@@ -1,4 +1,4 @@
-import { queryFakeList, queryArticleList, saveArticle, updateArticle, uploadImage } from '../services/api';
+import { queryArticleList, saveArticle, updateArticle, uploadImage, deleteArticle, addLike } from '../services/api';
 
 export default {
   namespace: 'list',
@@ -50,8 +50,8 @@ export default {
         confirmLoading: true
       })
       console.log(payload)
-      const addResponse = yield call(saveArticle, {title: payload.title, content: payload.content})
-      
+      const addResponse = yield call(saveArticle, { title: payload.title, content: payload.content })
+
       console.log(addResponse)
       const postData = { file: payload.fileData, file_type: payload.fileType, article_id: addResponse.Data.article.ID }
       console.log(postData)
@@ -90,6 +90,57 @@ export default {
         type: "preparedArticle",
         payload: payload.data
       })
+    },
+    *addLike({ payload }, { call, put }) {
+      yield call(addLike, { id: payload.id, like: payload.like })
+      
+      const response2 = yield call(queryArticleList, payload);
+      console.log("fetch")
+      if (response2.hasOwnProperty("Data")) {
+        const list = response2.Data.list
+        yield put({
+          type: 'queryList',
+          payload: Array.isArray(list) ? list : [],
+        });
+      } else {
+        yield put({
+          type: 'queryList',
+          payload: [],
+        });
+      }
+    },
+    *rmArticle({ payload }, { call, put }) {
+      yield put({
+        type: 'changeConfirmLoading',
+        confirmLoading: true
+      })
+      console.log("put -> ", payload)
+      const response = yield call(deleteArticle, { id: payload.id })
+      console.log(response)
+      if (response.hasOwnProperty('Data')) {
+        // if (response.Data.status === 1) {
+        yield put({
+          type: 'changeConfirmLoading',
+          confirmLoading: false
+        })
+        // }
+      }
+
+      const response2 = yield call(queryArticleList, payload);
+      console.log("fetch")
+      if (response2.hasOwnProperty("Data")) {
+        const list = response2.Data.list
+        yield put({
+          type: 'queryList',
+          payload: Array.isArray(list) ? list : [],
+        });
+      } else {
+        yield put({
+          type: 'queryList',
+          payload: [],
+        });
+      }
+
     },
     *saveArticle({ payload }, { call, put }) {
       /////

@@ -20,10 +20,22 @@ export default {
     *fetchCurrent(_, { call, put }) {
       // const response = yield call(queryCurrent);
       let user = getUser()
-      yield put({
-        type: 'saveCurrentUser',
-        payload: { name: user },
-      });
+      console.log(user)
+      if (!user) {
+        yield put({
+          type: 'login/changeLoginStatus',
+          payload: {
+            status: false,
+            currentAuthority: 'guest',
+          }
+        })
+        window.location.reload();
+      } else {
+        yield put({
+          type: 'saveCurrentUser',
+          payload: { name: user },
+        });
+      }
     },
   },
 
