@@ -1,2 +1,2 @@
 
-export const host = 'http://localhost:8001'
+export const host = 'http://www.jiumuhuatian.com:8001'
