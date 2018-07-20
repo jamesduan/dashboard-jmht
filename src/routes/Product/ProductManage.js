@@ -50,6 +50,9 @@ export default class CardList extends PureComponent {
       type: "product/listProduct"
     });
 
+    this.props.dispatch({
+      type: "product/getSetList"
+    })
   }
 
   handleModalVisible = (flag) => {
@@ -64,6 +67,7 @@ export default class CardList extends PureComponent {
       type: 'product/addProduct',
       payload: {
         category_id: fieldsValue.category_id,
+        set_id: fieldsValue.set_id,
         name: fieldsValue.name,
         desc: fieldsValue.desc,
         fileData: this.state.fileData,
@@ -168,6 +172,7 @@ export default class CardList extends PureComponent {
     }
 
     const dataSource = product.products ? product.products : []
+    // console.log(product.products)
 
     return (
       <PageHeaderLayout
@@ -193,7 +198,7 @@ export default class CardList extends PureComponent {
                   <a style={{ color: "red" }} onClick={() => { }}><IconText type="delete" text={"删除"} /></a>
                 ]}>
                   <Card.Meta
-                    title={<a href="#">{item.Name}</a>}
+                    title={<a href="#">{item.ProductSet ? item.Name + " - " + item.ProductSet.Name : item.Name}</a>}
                     description={(
                       <Ellipsis className={styles.item} lines={3}>{item.Description}</Ellipsis>
                     )}
@@ -243,6 +248,35 @@ export default class CardList extends PureComponent {
               </Select>,
             )}
           </FormItem>
+
+          <FormItem
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            label="小标题"
+          >
+            {form.getFieldDecorator('set_id', {
+              rules: [{ required: true, message: '请选择小标题' }],
+            })(
+              // <Input placeholder="分类" />
+              <Select
+                showSearch
+                style={{ width: 200 }}
+                placeholder="选择一个小标题"
+                optionFilterProp="children"
+                // onChange={handleChange}
+                // onFocus={handleFocus}
+                // onBlur={handleBlur}
+                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {
+                  product.sets.map(function (item, index) {
+                    return (<Option key={index} value={item.ID}>{item.Name}</Option>)
+                  })
+                }
+              </Select>,
+            )}
+          </FormItem>
+
           <FormItem
             labelCol={{ span: 5 }}
             wrapperCol={{ span: 15 }}

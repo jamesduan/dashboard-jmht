@@ -1,13 +1,52 @@
-import { addProductCategory, queryCategoryList, removeProductCategory, createProduct, uploadImage, removeProduct, listProduct } from '../services/api';
+import { addProductCategory, queryCategoryList, removeProductCategory, createProduct, uploadImage, removeProduct, listProduct, querySetList, addProductSet, removeProductSet } from '../services/api';
 
 export default {
   namespace: 'product',
 
   state: {
     categories: [{ id: 1, name: "奶茶" }, { id: 2, name: "软欧包" }],
-    products: []
+    products: [],
+    sets: []
   },
   effects: {
+    *getSetList(_, { call, put }) {
+      const res1 = yield call(querySetList)
+      if (res1.hasOwnProperty('Data')) {
+        yield put({
+          type: 'productSet',
+          payload: {
+            sets: res1.Data.list
+          }
+        })
+      }
+    },
+    *saveSet({ payload }, { call, put }) {
+      // console.log(payload)
+      yield call(addProductSet, { name: payload.name, en_name: payload.en_name });
+      // get
+      const res1 = yield call(querySetList)
+      if (res1.hasOwnProperty('Data')) {
+        yield put({
+          type: 'productSet',
+          payload: {
+            sets: res1.Data.list
+          }
+        })
+      }
+    },
+    *removeSet({ payload }, { call, put }) {
+      console.log(payload)
+      yield call(removeProductSet, { id: payload.id })
+      const res1 = yield call(querySetList)
+      if (res1.hasOwnProperty('Data')) {
+        yield put({
+          type: 'productSet',
+          payload: {
+            sets: res1.Data.list
+          }
+        })
+      }
+    },
     *getCategoryList(_, { call, put }) {
       const response = yield call(queryCategoryList)
       if (response.hasOwnProperty('Data')) {
@@ -53,7 +92,7 @@ export default {
     },
     *addProduct({ payload }, { call, put }) {
       // console.log(payload)
-      const res1 = yield call(createProduct, { name: payload.name, description: payload.desc, category_id: payload.category_id })
+      const res1 = yield call(createProduct, { name: payload.name, description: payload.desc, category_id: payload.category_id, set_id: payload.set_id })
       // console.log("create product res -> ", res1)
 
       const imagePostData = {
@@ -99,6 +138,12 @@ export default {
       return {
         ...state,
         products: action.payload.products
+      }
+    },
+    productSet(state, action) {
+      return {
+        ...state,
+        sets: action.payload.sets
       }
     }
   },

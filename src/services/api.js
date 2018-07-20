@@ -76,6 +76,29 @@ export async function queryCategoryList() {
   });
 }
 
+export async function querySetList() {
+  // console.log(getToken())
+  return request(host + '/jmht/api/product/set/list', {
+    headers: { token: getToken() }
+  });
+}
+
+export async function addProductSet(params) {
+  return request(host + "/jmht/api/product/set/add", {
+    headers: { token: getToken() },
+    method: "POST",
+    body: params
+  })
+}
+
+export async function removeProductSet(params) {
+  return request(host + "/jmht/api/product/set/remove", {
+    headers: { token: getToken() },
+    method: "POST",
+    body: params
+  })
+}
+
 export async function saveArticle(params) {
   return request(host + "/jmht/api/article/add", {
     headers: { token: getToken() },

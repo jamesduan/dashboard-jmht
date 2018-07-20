@@ -145,6 +145,10 @@ const menuData = [
         path: "category"
       },
       {
+        name: "小标题",
+        path: "set"
+      },
+      {
         name: "产品管理",
         path: "productManage"
       }
